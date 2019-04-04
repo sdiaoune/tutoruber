@@ -14,7 +14,7 @@ export default class Home extends React.Component {
       }
 
       static navigationOptions = {
-        // title: 'Welcome'
+        title: 'Welcome'
         // header: null
       };
 
@@ -38,15 +38,15 @@ export default class Home extends React.Component {
       description={marker.description} />
       </MapView>
       <View style={styles.container} >
+        <TouchableOpacity onPress={() => navigate('Settings', {})} style={styles.btn}>
+        <Text style={{color: '#848484'}}>Go to list...</Text>
+        </TouchableOpacity>
+      </View>
+      {/* <View style={styles.container} >
         <TouchableOpacity onPress={() => navigate('Search', {})} style={styles.btn}>
         <Text style={{color: '#848484'}}>Search for a course...</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.container} >
-        <TouchableOpacity onPress={() => navigate('Search', {})} style={styles.btn}>
-        <Text style={{color: '#848484'}}>Search for a course...</Text>
-        </TouchableOpacity>
-      </View>
+      </View> */}
       </View>
     );
   }

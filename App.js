@@ -9,6 +9,10 @@ import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
 import Search from './Search';
+import List from './List';
+import Settings from './Settings';
+import UpdateProfile from './UpdateProfile';
+import UpdateLogin from './UpdateLogin';
 
 const AppNavigator = createStackNavigator({
   
@@ -23,6 +27,18 @@ const AppNavigator = createStackNavigator({
   },
   Search: {
     screen: Search
+  },
+  List: {
+    screen: List
+  },
+  Settings: {
+    screen: Settings
+  },
+  UpdateProfile: {
+    screen: UpdateProfile
+  },
+  UpdateLogin: {
+    screen: UpdateLogin
   }
   
 });

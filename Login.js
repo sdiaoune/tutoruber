@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } fr
 import { LinearGradient } from 'expo';
 import { black } from 'ansi-colors';
 
+//import axios
+const axios = require('axios');
+
 
 export default class Login extends React.Component {
 
@@ -11,8 +14,11 @@ export default class Login extends React.Component {
       this.state = { username: 'Username', password: 'Password' };
     }
 
+
+
   render() {
     const {navigate} = this.props.navigation;
+    console.log('rendering')
     return (
       // '['#4c669f', '#3b5998', '#192f6a']'
       <View style={styles.container}>
