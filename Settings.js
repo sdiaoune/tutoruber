@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppRegistry, FlatList, StyleSheet, Text, View, ListView, TouchableHighlight } from 'react-native';
+import { AppRegistry, FlatList, StyleSheet, Text, View, ListView, TouchableHighlight, TouchableOpacity } from 'react-native';
 
 //DataSource
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -22,31 +22,23 @@ export default class Settings extends React.Component {
             <View style={styles.container}>
                 <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(rowData, sectionID, rowID, highlightRow) => <TouchableHighlight style={styles.listrow} onPress={()=> 
+                renderRow={(rowData, sectionID, rowID, highlightRow) => <TouchableOpacity style={styles.listrow} onPress={()=> 
                 {
-                    if(rowID = 1) {
-                        navigate('UpdateProfile', {})
+                    if(rowID == 0) {
+                        navigate('UpdateProfile', {});
+                        console.log(rowID);
                     }
-                    if (rowID = 2){
-                        navigate('UpdateLogin', {})
-                    }
-
-                    // switch(rowID){
-                    //     case 1:
-                    //     navigate('UpdateProfile', {})
-                    //     break;
-                    //     case 2:
-                    //     navigate('UpdateLogin', {})
-                    //     break;
-                    // }
-                    
+                    if (rowID == 1){
+                        navigate('UpdateLogin', {});
+                        console.log(rowID)
+                    }                    
                 }
                 }>
                     <Text style={{fontSize: 20, marginLeft: 8}}>{rowData}</Text>
                     {/* <TouchableOpacity style={styles.btn} onPress={() => {}}>
                         <Text style={{textAlign: 'center', }}>Book</Text>
                     </TouchableOpacity> */}
-                    </TouchableHighlight>}
+                    </TouchableOpacity>}
                 renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}
                 />}
                 />

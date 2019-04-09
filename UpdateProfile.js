@@ -52,7 +52,7 @@ export default class UpdateProfile extends React.Component {
 
     render(){
         return(
-            <View>
+            <View style={styles.container}>
                 <Text style={styles.text}>First Name</Text>
                 <TextInput style={styles.textbox} onChangeText={(text) => this.setState({firstname: text})} value={this.state.firstname}></TextInput>
                 <Text style={styles.text}>Last Name</Text>
@@ -67,12 +67,16 @@ export default class UpdateProfile extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center'
+    },
     textbox: {
         borderWidth: 1,
         borderColor: 'black',
         margin: 8,
         padding: 8,
-        borderRadius: 8
+        borderRadius: 8,
+        width: '90%'
     },
     btn: {
         height: 40,
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
         margin: 8,
         borderRadius: 8,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     text: {
         margin: 8

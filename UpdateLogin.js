@@ -5,7 +5,7 @@ const axios = require('axios');
 export default class UpdateLogin extends React.Component {
     constructor(props){
         super(props)
-        this.state = {email: 'John', password: 'Doe'}
+        this.state = {email: 'johndoe@email.com', password: 'jdoepass123'}
     }
 
     makechanges(){
@@ -35,11 +35,11 @@ export default class UpdateLogin extends React.Component {
 
     render(){
         return(
-            <View>
+            <View style={styles.container}>
                 <Text style={styles.text}>Email</Text>
-                <TextInput style={styles.textbox} onChangeText={(text) => this.setState({email: text})} value={this.state.firstname}></TextInput>
+                <TextInput style={styles.textbox} onChangeText={(text) => this.setState({email: text})} value={this.state.email}></TextInput>
                 <Text style={styles.text}>Password</Text>
-                <TextInput style={styles.textbox} onChangeText={(text) => this.setState({password: text})} value={this.state.lastname}></TextInput>
+                <TextInput style={styles.textbox} onChangeText={(text) => this.setState({password: text})} value={this.state.password}></TextInput>
                 <TouchableOpacity style={styles.btn} onPress={()=>{this.makechanges()}}><Text>Submit Changes</Text></TouchableOpacity>
             </View>
         )
@@ -48,12 +48,16 @@ export default class UpdateLogin extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center'
+    },
     textbox: {
         borderWidth: 1,
         borderColor: 'black',
         margin: 8,
         padding: 8,
-        borderRadius: 8
+        borderRadius: 8,
+        width: '90%'
     },
     btn: {
         height: 40,
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
         margin: 8,
         borderRadius: 8,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     text: {
         margin: 8

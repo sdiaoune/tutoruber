@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinearGradient } from 'expo';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, TouchableHighlight, Modal, Picker } from 'react-native';
 
 import MapView from 'react-native-maps';
 
@@ -10,7 +10,7 @@ export default class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { search: 'search',  };
+        this.state = { search: 'search', modalVisible: false, markers: [], searchbox: 'Search', allclasses: classes, course: ''};
       }
 
       static navigationOptions = {
@@ -18,11 +18,60 @@ export default class Home extends React.Component {
         // header: null
       };
 
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+  performSearch(){
+    this.setState({markers: marks})
+    this.setModalVisible(!this.state.modalVisible)
+  }
 
   render() {
       const {navigate} = this.props.navigation;
     return (
         <View style={{flex: 1}}>
+        {/* Popup Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={{marginTop: 22, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{padding: 16, width: 300, height: 'auto', borderRadius: 16, backgroundColor: 'white', shadowOffset:{  width: 2,  height: 4,  },
+    shadowColor: '#848484',
+    shadowOpacity: 0.2,
+    borderRadius: 8}}>
+              <Text>Hello World!</Text>
+              <Picker
+              selectedValue={this.state.course}
+              style={{ marginTop: 8, marginBottom: 8 }}
+              onValueChange={(itemValue, itemIndex) => this.setState({course: itemValue})}>
+              {
+                this.state.allclasses.map((item, key)=>{
+                return <Picker.Item key={key} label={item.classTitle} value={item.classTitle} />
+                })
+              }
+              {/* <Picker.Item label="Java" value="java" />
+              <Picker.Item label="JavaScript" value="js" /> */}
+              </Picker>
+              <TouchableOpacity style={styles.btn} onPress={()=>{
+                this.state.searchbox = this.state.course
+                this.performSearch();
+              }}>
+                <Text>Perform Search</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }} style={styles.btn}>
+                <Text>Dismiss</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <MapView
         style={{ flex: 1 }}
         initialRegion={{
@@ -32,16 +81,23 @@ export default class Home extends React.Component {
           longitudeDelta: 0.005,
         }}
       >
-      <Marker
-      coordinate={marker.latlng}
-      title={marker.title}
-      description={marker.description} />
+      {/* Set Markers */}
+      {
+        this.state.markers.map((mark, key) => 
+        <MapView.Marker
+          key={key}
+          coordinate={mark.latlng}
+          title={mark.title}
+          description={mark.description}
+        />)
+      }
       </MapView>
       <View style={styles.container} >
-        <TouchableOpacity onPress={() => navigate('Settings', {})} style={styles.btn}>
-        <Text style={{color: '#848484'}}>Go to list...</Text>
+        <TouchableOpacity onPress={() => this.setModalVisible(!this.state.modalVisible)} style={styles.btn}>
+        <Text style={{color: '#848484'}}>{this.state.searchbox}</Text>
         </TouchableOpacity>
       </View>
+
       {/* <View style={styles.container} >
         <TouchableOpacity onPress={() => navigate('Search', {})} style={styles.btn}>
         <Text style={{color: '#848484'}}>Search for a course...</Text>
@@ -85,3 +141,41 @@ const marker = {
         longitude: -80.3733
     }
 }
+
+var marks = [
+  {
+    title: 'First Location',
+    description: 'FIU',
+    latlng: {
+      latitude: 25.7574,
+      longitude: -80.3733
+    }
+  },
+  {
+    title: 'Second Location',
+    description: 'FIU',
+    latlng: {
+      latitude: 25.7571,
+      longitude: -80.3739
+    }
+  }
+]
+
+const classes = [
+  {
+    classTitle: 'Programming I',
+    classCode: 'COP 2210'
+  },
+  {
+    classTitle: 'Programming II',
+    classCode: 'COP 3337'
+  },
+  {
+    classTitle: 'Programming III',
+    classCode: 'COP 4338'
+  },
+  {
+    classTitle: 'Database',
+    classCode: 'COP 4710'
+  }
+]
