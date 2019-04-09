@@ -10,7 +10,7 @@ export default class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { search: 'search', modalVisible: false, markers: [], searchbox: 'Search', allclasses: classes, course: ''};
+        this.state = { search: 'search', modalVisible: false, modal2Visible: false, markers: [], searchbox: 'Search', allclasses: classes, course: '', modal2name: ''};
       }
 
       static navigationOptions = {
@@ -20,6 +20,9 @@ export default class Home extends React.Component {
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
+  }
+  setModal2Visible(visible, name) {
+    this.setState({modal2Visible: visible, modal2name: name});
   }
 
   performSearch(){
@@ -72,6 +75,28 @@ export default class Home extends React.Component {
             </View>
           </View>
         </Modal>
+        <Modal animationType="slide"
+          transparent={true}
+          visible={this.state.modal2Visible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={{marginTop: 22, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{padding: 16, width: 300, height: 'auto', borderRadius: 16, backgroundColor: 'white', shadowOffset:{  width: 2,  height: 4,  },
+    shadowColor: '#848484',
+    shadowOpacity: 0.2,
+    borderRadius: 8}}n>
+    <Text>Profile Details</Text>
+    <Text style={{fontSize: 18}}>{this.state.modal2name}</Text>
+<TouchableOpacity
+                onPress={() => {
+                  this.setModal2Visible(!this.state.modal2Visible);
+                }} style={styles.btn}>
+                <Text>Dismiss</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <MapView
         style={{ flex: 1 }}
         initialRegion={{
@@ -87,10 +112,19 @@ export default class Home extends React.Component {
         <MapView.Marker
           key={key}
           coordinate={mark.latlng}
-          title={mark.title}
-          description={mark.description}
+          onPress={()=>{this.setModal2Visible(!this.state.modal2Visible, mark.name)}}
         />)
       }
+      {/* {
+        this.state.markers.map((mark, key) => 
+        <MapView.Marker
+          key={key}
+          coordinate={mark.latlng}
+          title={mark.title}
+          description={mark.description}
+          onPress={()=>{this.setModal2Visible(!this.state.modal2Visible)}}
+        />)
+      } */}
       </MapView>
       <View style={styles.container} >
         <TouchableOpacity onPress={() => this.setModalVisible(!this.state.modalVisible)} style={styles.btn}>
@@ -146,6 +180,8 @@ var marks = [
   {
     title: 'First Location',
     description: 'FIU',
+    name: 'Christopher Fernandez',
+    major: 'Computer Science',
     latlng: {
       latitude: 25.7574,
       longitude: -80.3733
@@ -154,6 +190,8 @@ var marks = [
   {
     title: 'Second Location',
     description: 'FIU',
+    name: 'John Doe',
+    major: 'Computer Engineering',
     latlng: {
       latitude: 25.7571,
       longitude: -80.3739

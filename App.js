@@ -31,9 +31,6 @@ const AppNavigator = createStackNavigator({
   List: {
     screen: List
   },
-  Settings: {
-    screen: Settings
-  },
   UpdateProfile: {
     screen: UpdateProfile
   },
