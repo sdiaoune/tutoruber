@@ -1,31 +1,26 @@
 import React from 'react';
-import { AppRegistry, FlatList, StyleSheet, Text, View, ListView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ListView, TouchableOpacity } from 'react-native';
 const axios = require('axios');
-
-// var ds = new ListView.DataSource({rowHasChanged: this._rowHasChanged.bind(this) });
 
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-export default class List extends React.Component {
+export default class TutorList extends React.Component {
     
     constructor(props){
         super(props)
         this.state = {
         dataSource: ds.cloneWithRows(['']),
         };
-        
     }
 
     static navigationOptions = {
-        title: 'Nearby Tutors'
-        // header: null
+        title: 'TutorList'
       };
 
     componentDidMount(){
-        axios.post('http://10.108.47.73:3000/api/tutors')
+        axios.post('http://10.0.0.71:3000/api/tutors')
         .then( (response) => {
             var array = response;
-            // this.setState({dataSource: ds.cloneWithRows(JSON.stringify(response.data))})
             this.setState({dataSource: ds.cloneWithRows(response.data)
             })
         })
@@ -37,9 +32,7 @@ export default class List extends React.Component {
     render(){
         const {navigate} = this.props.navigation;
         return(
-            <View style={styles.container}>
-            {/* <Text style={{fontSize: 20, marginLeft: 8}}>Nearby tutors</Text> */}
-            
+            <View style={styles.container}>            
             <ListView
                 dataSource={this.state.dataSource}
                 renderRow={(rowData) => <View style={styles.listrow}>
@@ -53,8 +46,7 @@ export default class List extends React.Component {
                     </View>}
                 renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
             />
-
-      </View>
+        </View>
         );
     }
 }

@@ -1,48 +1,67 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation';
 
-import { black } from 'ansi-colors';
+//Created Imports/Our Imports
+import SettingsScreen from './NavScreens/SettingsScreen';
+import RegisterScreen from './NavScreens/RegisterScreen';
+import MenuDrawer from './components/MenuDrawer';
+import ProfileScreen from './NavScreens/ProfileScreen';
+import UpdateLogin from './NavScreens/UpdateLogin';
+import UpdateProfile from './NavScreens/UpdateProfile';
+import HomeMapScreen from './NavScreens/HomeMapScreen';
+import HomeLoginScreen from './NavScreens/HomeLoginScreen';
+import TutorList from './components/TutorList';
 
-import { createStackNavigator, createAppContainer } from "react-navigation";
+const WIDTH = Dimensions.get('window').width;
 
-import Login from './Login';
-import Signup from './Signup';
-import Home from './Home';
-import Search from './Search';
-import List from './List';
-import Settings from './Settings';
-import UpdateProfile from './UpdateProfile';
-import UpdateLogin from './UpdateLogin';
+const DrawerConfig = {
+    drawerWidth: WIDTH*0.83,
+    drawerPosition: 'right',
+    contentComponent:({ navigation }) => {
+        return(<MenuDrawer navigation={navigation}/>)
+    }
+}
 
-const AppNavigator = createStackNavigator({
-  
-  Home: {
-    screen: Home
+const drawerNavi = createDrawerNavigator({
+  HomeMap: {
+    screen: HomeMapScreen,
   },
-  Login: {
-    screen: Login
+  Settings: {
+    screen: SettingsScreen,
   },
-  Signup: {
-    screen: Signup
+  Profile: {
+    screen: ProfileScreen,
+  }
+},
+  DrawerConfig
+);
+
+const stackNavi = createStackNavigator({
+  HomeLogin: {
+    screen: HomeLoginScreen,
   },
-  Search: {
-    screen: Search
+  HomeMap: { //Drawer Navigator should display after login page
+    screen: drawerNavi,
   },
-  List: {
-    screen: List
+  Register: {
+    screen: RegisterScreen,
   },
   UpdateProfile: {
     screen: UpdateProfile
   },
   UpdateLogin: {
     screen: UpdateLogin
+  },
+  TutorList: {
+    screen: TutorList
   }
-  
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
 });
 
-const App = createAppContainer(AppNavigator);
-
-export default App;
-
-
-
+export default createAppContainer(stackNavi);
