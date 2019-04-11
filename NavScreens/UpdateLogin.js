@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert} from 'react-native';
+import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
 export default class UpdateLogin extends React.Component {
@@ -38,13 +38,13 @@ export default class UpdateLogin extends React.Component {
 
     render(){
         return(
-            <View>
+            <SafeAreaView style={{flex: 1}}>
                 <Text style={styles.text}>Email</Text>
                 <TextInput style={styles.textbox} onChangeText={(text) => this.setState({email: text})} value={this.state.firstname}></TextInput>
                 <Text style={styles.text}>Password</Text>
                 <TextInput style={styles.textbox} onChangeText={(text) => this.setState({password: text})} value={this.state.lastname}></TextInput>
                 <TouchableOpacity style={styles.btn} onPress={()=>{this.makechanges()}}><Text>Submit Changes</Text></TouchableOpacity>
-            </View>
+            </SafeAreaView>
         )
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert} from 'react-native';
+import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
 export default class UpdateProfile extends React.Component {
@@ -55,7 +55,7 @@ export default class UpdateProfile extends React.Component {
 
     render(){
         return(
-            <View>
+            <SafeAreaView style={{flex: 1}}>
                 <Text style={styles.text}>First Name</Text>
                 <TextInput style={styles.textbox} onChangeText={(text) => this.setState({firstname: text})} value={this.state.firstname}></TextInput>
                 <Text style={styles.text}>Last Name</Text>
@@ -63,7 +63,7 @@ export default class UpdateProfile extends React.Component {
                 <Text style={styles.text}>Username</Text>
                 <TextInput style={styles.textbox} onChangeText={(text) => this.setState({username: text})} value={this.state.username}></TextInput>
                 <TouchableOpacity style={styles.btn} onPress={()=>{this.makechanges()}}><Text>Submit Changes</Text></TouchableOpacity>
-            </View>
+            </SafeAreaView>
         )
     }
 

@@ -12,6 +12,7 @@ import UpdateProfile from './NavScreens/UpdateProfile';
 import HomeMapScreen from './NavScreens/HomeMapScreen';
 import HomeLoginScreen from './NavScreens/HomeLoginScreen';
 import ProfileReviewScreen from './NavScreens/ProfileReviewScreen';
+import ReviewScreen from './NavScreens/ReviewScreen';
 
 const WIDTH = Dimensions.get('window').width;
 const DrawerConfig = {
@@ -55,6 +56,9 @@ const stackNavi = createStackNavigator({
   ProfileReview: {
     screen: ProfileReviewScreen
   },
+  Review: {
+    screen: ReviewScreen
+  }
 },
 {
   headerMode: 'none',

@@ -22,7 +22,7 @@ export default class ProfileReviewScreen extends React.Component {
       };
     
     render(){
-        const {navigate} = this.props;
+        const {navigate} = this.props.navigation;
         // const name = navigate.getParam('name','name');
         // const major = navigate.getParam('major','major');
         // const description = navigate.getParam('description','description');
@@ -53,6 +53,7 @@ export default class ProfileReviewScreen extends React.Component {
                     // if (rowID == 1){
                     //   this.props.navigation.navigate('UpdateLogin', {})
                     // }
+                    this.props.navigation.navigate('Review', {})
                 }
                 }>
                     <View style={{padding: 20}}>
