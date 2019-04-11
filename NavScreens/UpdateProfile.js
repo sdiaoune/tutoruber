@@ -7,6 +7,9 @@ export default class UpdateProfile extends React.Component {
         super(props)
         this.state = {firstname: 'John', lastname: 'Doe', username: 'jdoe111'}
     }
+    static navigationOptions = {
+        title: 'UpdateProfile',
+    };
 
     makechanges(){
         //complete change
@@ -20,7 +23,7 @@ export default class UpdateProfile extends React.Component {
 
         axios({
             method: 'post',
-            url: 'http://10.108.47.73:3000/api/updateuser',
+            url: 'http://10.108.229.254:3000/api/updateuser',
             data: {
                 firstname: this.state.firstname,
                 lastname: this.state.lastname,
@@ -52,7 +55,7 @@ export default class UpdateProfile extends React.Component {
 
     render(){
         return(
-            <View style={styles.container}>
+            <View>
                 <Text style={styles.text}>First Name</Text>
                 <TextInput style={styles.textbox} onChangeText={(text) => this.setState({firstname: text})} value={this.state.firstname}></TextInput>
                 <Text style={styles.text}>Last Name</Text>
@@ -67,16 +70,12 @@ export default class UpdateProfile extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center'
-    },
     textbox: {
         borderWidth: 1,
         borderColor: 'black',
         margin: 8,
         padding: 8,
-        borderRadius: 8,
-        width: '90%'
+        borderRadius: 8
     },
     btn: {
         height: 40,
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
         margin: 8,
         borderRadius: 8,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     text: {
         margin: 8

@@ -2,7 +2,7 @@ import React from 'react';
 import { LinearGradient } from 'expo';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, TouchableHighlight, Modal, Picker, Image } from 'react-native';
 
-export default class Profile extends React.Component {
+export default class ProfileReviewScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -11,6 +11,10 @@ export default class Profile extends React.Component {
             description: this.props.navigation.state.params.description
         }
     }
+
+    static navigationOptions = {
+        title: 'ProfileReview'
+      };
     
     render(){
         const {navigate} = this.props;
