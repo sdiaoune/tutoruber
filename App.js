@@ -13,6 +13,7 @@ import List from './List';
 import Settings from './Settings';
 import UpdateProfile from './UpdateProfile';
 import UpdateLogin from './UpdateLogin';
+import Profile from './Profile';
 
 const AppNavigator = createStackNavigator({
   
@@ -36,6 +37,9 @@ const AppNavigator = createStackNavigator({
   },
   UpdateLogin: {
     screen: UpdateLogin
+  },
+  Profile: {
+    screen: Profile
   }
   
 });

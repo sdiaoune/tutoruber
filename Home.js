@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinearGradient } from 'expo';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, TouchableHighlight, Modal, Picker } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, TouchableHighlight, Modal, Picker, Image } from 'react-native';
 
 import MapView from 'react-native-maps';
 
@@ -10,19 +10,18 @@ export default class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { search: 'search', modalVisible: false, modal2Visible: false, markers: [], searchbox: 'Search', allclasses: classes, course: '', modal2name: ''};
+        this.state = { search: 'search', modalVisible: false, modal2Visible: false, markers: [], searchbox: 'Search', allclasses: classes, course: '', modal2name: '', modal2major: '', modal2description: ''};
       }
 
       static navigationOptions = {
         title: 'Welcome'
-        // header: null
       };
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
-  setModal2Visible(visible, name) {
-    this.setState({modal2Visible: visible, modal2name: name});
+  setModal2Visible(visible, name, major, description) {
+    this.setState({modal2Visible: visible, modal2name: name, modal2major: major, modal2description: description});
   }
 
   performSearch(){
@@ -82,18 +81,38 @@ export default class Home extends React.Component {
             Alert.alert('Modal has been closed.');
           }}>
           <View style={{marginTop: 22, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-            <View style={{padding: 16, width: 300, height: 'auto', borderRadius: 16, backgroundColor: 'white', shadowOffset:{  width: 2,  height: 4,  },
+            <View style={{padding: 16, width: 300, height: 'auto', borderRadius: 16, backgroundColor: 'white', shadowOffset:{  width: 2,  height: 4 },
     shadowColor: '#848484',
     shadowOpacity: 0.2,
-    borderRadius: 8}}n>
-    <Text>Profile Details</Text>
+    borderRadius: 8, justifyContent: 'center', alignItems: 'center'}}n>
+    <Image
+          style={{width: 100, height: 100, borderRadius: 100/2}}
+          source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+        />
     <Text style={{fontSize: 18}}>{this.state.modal2name}</Text>
-<TouchableOpacity
+    <Text style={{fontSize: 12}}>{this.state.modal2major}</Text>
+    <Text></Text>
+    <Text style={{fontSize: 12}}>{this.state.modal2description}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setModal2Visible(!this.state.modal2Visible);
+                }} style={styles.btn2}>
+                <Text style={{color: 'white'}}>Book Now</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setModal2Visible(!this.state.modal2Visible);
+                  this.props.navigation.navigate('Profile', {name: this.state.modal2name, major: this.state.modal2major, description: this.state.modal2description});
+                }} style={styles.btn}>
+                <Text style={{}}>Open Profile</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => {
                   this.setModal2Visible(!this.state.modal2Visible);
                 }} style={styles.btn}>
                 <Text>Dismiss</Text>
               </TouchableOpacity>
+              
             </View>
           </View>
         </Modal>
@@ -112,7 +131,7 @@ export default class Home extends React.Component {
         <MapView.Marker
           key={key}
           coordinate={mark.latlng}
-          onPress={()=>{this.setModal2Visible(!this.state.modal2Visible, mark.name)}}
+          onPress={()=>{this.setModal2Visible(!this.state.modal2Visible, mark.name, mark.major, mark.description)}}
         />)
       }
       {/* {
@@ -160,11 +179,20 @@ const styles = StyleSheet.create({
         height: 40,
         width: '90%',
         backgroundColor: '#DCDCDC',
-        margin: 16,
+        margin: 8,
         borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    btn2: {
+      height: 40,
+      width: '90%',
+      backgroundColor: '#FC3953',
+      margin: 8,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center'
+  }
 })
 
 const marker = {
@@ -179,7 +207,7 @@ const marker = {
 var marks = [
   {
     title: 'First Location',
-    description: 'FIU',
+    description: 'Hi, I tutor Programming II and Programming II',
     name: 'Christopher Fernandez',
     major: 'Computer Science',
     latlng: {
@@ -189,7 +217,7 @@ var marks = [
   },
   {
     title: 'Second Location',
-    description: 'FIU',
+    description: 'Hi, I tutor Database and Programming I',
     name: 'John Doe',
     major: 'Computer Engineering',
     latlng: {
