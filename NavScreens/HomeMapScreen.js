@@ -151,7 +151,11 @@ export default class HomeMapScreen extends React.Component {
       <Marker //Marker for User's location
         coordinate={marker.latlng}
         title={marker.title}
-        description={marker.description} />
+        description={marker.description} >
+        <View style={styles.mycircle}>
+          <Text style={styles.pinText}>M</Text>
+        </View>
+        </Marker>
       
       {/* Set Markers */}
       {
@@ -160,7 +164,11 @@ export default class HomeMapScreen extends React.Component {
           key={key}
           coordinate={mark.latlng}
           onPress={()=>{this.setModal2Visible(!this.state.modal2Visible, mark.name, mark.major, mark.description)}}
-        />)
+        >
+        <View style={styles.circle}>
+          <Text style={styles.pinText}>{key + 1}</Text>
+        </View>
+        </MapView.Marker>)
       }
       </MapView>
       </SafeAreaView>
@@ -210,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center'
-},
+  },
     modalStyle: {
       marginTop: 22,
       flex: 1,
@@ -228,6 +236,25 @@ const styles = StyleSheet.create({
       shadowColor: '#848484',
       shadowOpacity: 0.2,
       borderRadius: 8
+    },
+    circle: {
+      width: 30,
+      height: 30,
+      borderRadius: 30 / 2,
+      backgroundColor: 'red',
+    },
+    mycircle: {
+      width: 30,
+      height: 30,
+      borderRadius: 30 / 2,
+      backgroundColor: 'blue',
+    },
+    pinText: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      fontSize: 20,
+      marginBottom: 10,
     }
 })
 
@@ -236,7 +263,7 @@ const marker = {
   description: 'FIU',
   latlng: {
       latitude: 25.7574,
-      longitude: -80.3733
+      longitude: -80.3743
   }
 }
 
