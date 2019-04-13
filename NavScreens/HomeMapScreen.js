@@ -1,6 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+//Socket for pinging
+import SocketIOClient from 'socket.io-client';
+//ignore socket warning (necessary for react-native)
+console.ignoredYellowBox = ['Remote debugger'];
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings([
+    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
+]);
+
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
@@ -11,7 +20,12 @@ export default class HomeMapScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { search: 'search', modalVisible: false, modal2Visible: false, markers: [], searchbox: 'Search', allclasses: classes, course: '', modal2name: '', modal2major: '', modal2description: ''};
+        this.socket = SocketIOClient('http://100.64.2.194:4000');
+        this.socket.on('chat message', (message) => {
+          console.log(message);
+          this.setModal3Visible(!this.state.modal3Visible);
+        } );
+        this.state = { search: 'search', modalVisible: false, modal2Visible: false, modal3Visible: false, markers: [], searchbox: 'Search', allclasses: classes, course: '', modal2name: '', modal2major: '', modal2description: ''};
       }
 
       static navigationOptions = {
@@ -24,6 +38,9 @@ export default class HomeMapScreen extends React.Component {
       }
       setModal2Visible(visible, name, major, description) {
         this.setState({modal2Visible: visible, modal2name: name, modal2major: major, modal2description: description});
+      }
+      setModal3Visible(visible) {
+        this.setState({modal3Visible: visible});
       }
     
       performSearch(){
@@ -126,6 +143,36 @@ export default class HomeMapScreen extends React.Component {
                 <Text>Dismiss</Text>
               </TouchableOpacity>
               
+            </View>
+          </View>
+        </Modal>
+
+      {/* Popup Modal For Profiles */}
+      <Modal animationType="slide"
+      transparent={true}
+      visible={this.state.modal3Visible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+      }}>
+      <View style={{marginTop: 22, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{padding: 16, width: 300, height: 'auto', borderRadius: 16, backgroundColor: 'white', shadowOffset:{  width: 2,  height: 4 },
+    shadowColor: '#848484',
+    shadowOpacity: 0.2,
+    borderRadius: 8, justifyContent: 'center', alignItems: 'center'}}n>
+
+    <Text style={{fontSize: 18}}>'Someone' would like to send you a request</Text>
+    <TouchableOpacity
+    onPress={() => {
+      this.setModal3Visible(!this.state.modal3Visible);
+    }} style={styles.btn2}>
+      <Text style={{color: 'white'}}>Confirm</Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+    onPress={() => {
+      this.setModal3Visible(!this.state.modal3Visible);
+    }} style={styles.btn}>
+      <Text>Deny</Text>
+    </TouchableOpacity>
             </View>
           </View>
         </Modal>
