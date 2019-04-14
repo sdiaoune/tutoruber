@@ -1,14 +1,44 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+const axios = require('axios');
+
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
 
-export default class HomeLoginScreen extends React.Component {  
+export default class HomeLoginScreen extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      username: 'username',
+      password: 'password'
+    }
+  }  
   static navigationOptions = {
     title: 'HomeLogin',
   };
+
+  verifyUser(){
+    axios({
+      method: 'post',
+      url: 'http://100.64.2.194:3000/api/login',
+      data: {
+        username: this.state.username,
+        password: this.state.password
+      }
+    })
+    .then((res)=>{
+      console.log('works')
+      this.props.navigation.navigate('HomeMap')
+    })
+    .catch((res)=>{
+      console.log(res)
+      console.log(this.state.username)
+      console.log(this.state.password)
+    })
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -25,13 +55,13 @@ export default class HomeLoginScreen extends React.Component {
              {/*Used to move everything to around the center of the page */}
             <View style={{flex:0.4}}></View>
             <View>
-              <TextInput style = {styles.bodyTextInput} placeholder="Username" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' />
-              <TextInput style = {styles.bodyTextInput} placeholder="Password" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' secureTextEntry ={true} />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({username: text})} placeholder="Username" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({password: text})} placeholder="Password" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' secureTextEntry ={true} />
               <TouchableOpacity onPress={this.onPressForgotPass}>
                 <Text style = {styles.bodyText}>Forgot Password?</Text>
               </TouchableOpacity>
               <View style={styles.bodyButtonHolder}>
-                <Ripple onPress={() => this.props.navigation.navigate('HomeMap')}>
+                <Ripple onPress={() => this.verifyUser()}>
                   <Image source={require('../assets/LoginButton.png')} style={{width:90, height: 36}} />
                 </Ripple>
                 <Ripple onPress={() => this.props.navigation.navigate('Register')}>

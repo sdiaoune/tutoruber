@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Button, SafeAreaView } from 'react-native';
+import { ListView, StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Button, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+const axios = require('axios');
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
+
+
 
 export default class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -12,9 +15,54 @@ export default class ProfileScreen extends React.Component {
   constructor() {
     super()
     this.state = {
-       myText: 'My Original Text'
+       username: 'username',
+       email: 'email',
+       firstname: 'firstname',
+       lastname: 'lastname',
+       major: 'major',
+       list: [],
     }
+    this.dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
+
+  componentDidMount(){
+    this.displayUser()
+    this.displaySessions()
+  }
+
+  displayUser(){
+    console.log('running displayUser()')
+    axios({
+      method: 'post',
+      url: 'http://100.64.2.194:3000/api/singleuser',
+      data: {
+        user_id: 3
+      }
+    })
+    .then((res) => {
+      console.log(res.data.firstname)
+      this.setState({firstname: res.data.firstname,lastname: res.data.lastname,username: res.data.username,email: res.data.email, major: res.data.name,});
+    })
+    .catch(function(res){
+      console.log('error')
+    });
+  }
+  //Display past sessions
+  displaySessions(){
+    axios({
+      method: 'post',
+      url: 'http://100.64.2.194:3000/api/sessions',
+      data: {
+
+      }
+    })
+    .then((res) => {
+      this.setState({list: res.data});
+    })
+    .catch((res) => {})
+  }
+  
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -30,17 +78,42 @@ export default class ProfileScreen extends React.Component {
         <View style={styles.body}>
           <ImageBackground source={require('../assets/splashLogin.png')} style={{width: '100%', height: '100%'}}>
              {/*Used to move everything to around the center of the page */}
+             <Image
+                style={{width: 100, height: 100, borderRadius: 100/2}}
+                source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+                />
             <View style={{flex:0.05}}></View>
             <View style={styles.bodyCont}>
-              <Image source={require('../assets/blank-profile-pic.png')} style={{width: 100, height: 100, borderRadius: 50, marginBottom: 30}} />
-              <Text style={styles.bodyText}>Username:</Text>
-              <Text style={styles.dynamicText}>   {this.state.myText}</Text>
-              <Text style={styles.bodyText}>Email:</Text>
-              <Text style={styles.dynamicText}>   {this.state.myText}</Text>
-              <Text style={styles.bodyText}>First Name:</Text>
-              <Text style={styles.dynamicText}>   {this.state.myText}</Text>
-              <Text style={styles.bodyText}>Last Name:</Text>
-              <Text style={styles.dynamicText}>   {this.state.myText}</Text>
+            <Text style={{fontSize: 18}}>{this.state.firstname + ' ' + this.state.lastname}</Text>
+            <Text style={{fontSize: 18}}>{this.state.major}</Text>
+            <Text style={{fontSize: 18}}></Text>
+            <View style={{width: '100%'}}>
+            <ListView
+              enableEmptySections={true}
+              dataSource={this.dataSource.cloneWithRows(this.state.list)}
+              renderRow={(rowData, sectionID, rowID, highlightRow) => 
+                <Ripple style={styles.listrow} onPress={()=> 
+            {
+                // if(rowID == 0) {
+                //     this.props.navigation.navigate('UpdateProfile', {})
+                // }
+                // if (rowID == 1){
+                //   this.props.navigation.navigate('UpdateLogin', {})
+                // }
+                this.props.navigation.navigate('Review', {})
+            }
+            }>
+                <View style={{padding: 20}}>
+                <Text style={{fontSize: 20, marginLeft: 8, color: '#0C6CD4'}}>Soya Diaoune</Text>
+                <Text style={{fontSize: 12, marginLeft: 8}}>{rowData.userratingtutor}/5 stars</Text>
+                <Text style={{fontSize: 16, marginLeft: 8, color: '#444444'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                </View>
+                </Ripple>
+                
+                }
+                renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+            />
+            </View>
             </View>
           </ImageBackground>
         </View>
@@ -81,6 +154,7 @@ const styles = StyleSheet.create({
   body: {
     flex:1, //Fills remaining space
     backgroundColor: '#000',
+    alignItems: 'center'
   },
   bodyCont: {
       marginLeft: 40,
