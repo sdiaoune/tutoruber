@@ -1,6 +1,8 @@
 import React, {Fragment} from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+const axios = require('axios');
+
 //Socket for pinging
 import SocketIOClient from 'socket.io-client';
 //ignore socket warning (necessary for react-native)
@@ -20,12 +22,12 @@ export default class HomeMapScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.socket = SocketIOClient('http://10.0.0.71:4000');
+        this.socket = SocketIOClient('http://10.108.47.73:4000');
         this.socket.on('chat message', (message) => {
           console.log(message);
           this.setModal3Visible(!this.state.modal3Visible);
         } );
-        this.state = { search: 'search', modalVisible: false, modal2Visible: false, modal3Visible: false, markers: [], searchbox: 'Search', allclasses: classes, course: '', modal2name: '', modal2major: '', modal2description: ''};
+        this.state = { search: 'search', modalVisible: false, modal2Visible: false, modal3Visible: false, markers: [], searchbox: 'Search', allclasses: [], course: '', modal2name: '', modal2major: '', modal2description: '', };
       }
 
       static navigationOptions = {
@@ -47,6 +49,24 @@ export default class HomeMapScreen extends React.Component {
       performSearch(){
         this.setState({markers: marks})
         this.setModalVisible(!this.state.modalVisible)
+      }
+
+      saveMajorsToList(){
+        axios({
+          method: 'post',
+          url: 'http://10.108.47.73:3000/api/majors',
+          data: {
+  
+          }
+        })
+        .then((res) => {
+          this.setState({allclasses: res.data});
+        })
+        .catch((res) => {})
+      }
+  
+      componentDidMount() {
+        this.saveMajorsToList()
       }
 
   render() {
@@ -85,7 +105,7 @@ export default class HomeMapScreen extends React.Component {
                   onValueChange={(itemValue, itemIndex) => this.setState({course: itemValue})}>
                   {
                     this.state.allclasses.map((item, key)=>{
-                    return <Picker.Item key={key} label={item.classTitle} value={item.classTitle} />
+                    return <Picker.Item key={key} label={item.name} value={item.name} />
                     })
                   }
                 </Picker>

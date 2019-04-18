@@ -23,7 +23,7 @@ export default class UpdateProfile extends React.Component {
 
         axios({
             method: 'post',
-            url: 'http://10.0.0.71:3000/api/updateuser',
+            url: 'http://10.108.47.73:3000/api/updateuser',
             data: {
                 firstname: this.state.firstname,
                 lastname: this.state.lastname,

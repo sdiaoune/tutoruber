@@ -14,7 +14,7 @@ export default class UpdateLogin extends React.Component {
     makechanges(){
         axios({
             method: 'post',
-            url: 'http://10.0.0.71:3000/api/updatelogin',
+            url: 'http://10.108.47.73:3000/api/updatelogin',
             data: {
                 email: this.state.email,
                 password: this.state.password,

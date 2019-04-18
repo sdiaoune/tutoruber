@@ -29,7 +29,7 @@ export default class RegisterScreen extends React.Component {
     saveMajorsToList(){
       axios({
         method: 'post',
-        url: 'http://10.0.0.71:3000/api/majors',
+        url: 'http://10.108.47.73:3000/api/majors',
         data: {
 
         }
@@ -47,7 +47,7 @@ export default class RegisterScreen extends React.Component {
     registerUser(){
       axios({
         method: 'post',
-        url: 'http://10.0.0.71:3000/api/createuser',
+        url: 'http://10.108.47.73:3000/api/createuser',
         data: {
           firstname: this.state.firstname,
           lastname: this.state.lastname,
@@ -59,6 +59,7 @@ export default class RegisterScreen extends React.Component {
       })
       .then((res)=>{
         console.log('registered')
+        console.log(this.state.firstname + ' ' + this.state.lastname + ' ' + this.state.username + ' ' + this.state.email + ' ' + this.state.password + ' ' + this.state.major + ' ')
         this.props.navigation.goBack();
       })
       .catch((res)=>{
@@ -98,7 +99,7 @@ export default class RegisterScreen extends React.Component {
                 <Picker
                   selectedValue={this.state.major}
                   style={{marginLeft: 65, marginRight: 65, paddingHorizontal: 7}}
-                  onValueChange={(itemValue) => this.setState({major: itemValue})}
+                  onValueChange={(itemValue, itemIndex) => this.setState({major: itemIndex})}
                 >
                   <Picker.Item label="Choose Major" value="none" />
                   {

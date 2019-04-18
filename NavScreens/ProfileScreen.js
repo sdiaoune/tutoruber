@@ -34,7 +34,7 @@ export default class ProfileScreen extends React.Component {
     console.log('running displayUser()')
     axios({
       method: 'post',
-      url: 'http://10.0.0.71:3000/api/singleuser',
+      url: 'http://10.108.47.73:3000/api/singleuser',
       data: {
         user_id: 3
       }
@@ -51,7 +51,7 @@ export default class ProfileScreen extends React.Component {
   displaySessions(){
     axios({
       method: 'post',
-      url: 'http://10.0.0.71:3000/api/sessions',
+      url: 'http://10.108.47.73:3000/api/sessions',
       data: {
 
       }
