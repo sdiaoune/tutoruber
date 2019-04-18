@@ -18,9 +18,13 @@ export default class MenuDrawer extends React.Component {
                 <View style={styles.topLink}>
                     {/* List of components that will link to other pages.
                         Left parameter is the page link, right is the text that will appear */}
+                    <TouchableOpacity style={{height:70}} onPress={() => {this.props.navigation.toggleDrawer()}}>
+                        <Text style={styles.naviLink}>Close Menu</Text>
+                    </TouchableOpacity>
                     {this.navLink('HomeMap', 'Home')}
                     {this.navLink('Profile', 'My Profile')}
                     {this.navLink('Settings', 'Settings')}
+                    {this.navLink('HomeLogin', 'Logout')}
                 </View>
 
                 {/* Footer */}

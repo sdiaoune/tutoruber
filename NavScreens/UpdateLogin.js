@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
@@ -14,7 +14,7 @@ export default class UpdateLogin extends React.Component {
     makechanges(){
         axios({
             method: 'post',
-            url: 'http://100.64.2.194:3000/api/updatelogin',
+            url: 'http://10.0.0.71:3000/api/updatelogin',
             data: {
                 email: this.state.email,
                 password: this.state.password,

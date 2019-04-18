@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 //Socket for pinging
@@ -20,7 +20,7 @@ export default class HomeMapScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.socket = SocketIOClient('http://100.64.2.194:4000');
+        this.socket = SocketIOClient('http://10.0.0.71:4000');
         this.socket.on('chat message', (message) => {
           console.log(message);
           this.setModal3Visible(!this.state.modal3Visible);
@@ -29,7 +29,8 @@ export default class HomeMapScreen extends React.Component {
       }
 
       static navigationOptions = {
-        title: 'HomeMap'
+        title: 'HomeMap',
+        drawerLockMode: 'locked-open',
       };
     
       //Created Functions
@@ -49,9 +50,10 @@ export default class HomeMapScreen extends React.Component {
       }
 
   render() {
-      const {navigate} = this.props.navigation;
     return (
-        <SafeAreaView style={{flex: 1}}>
+      <Fragment>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#0066BF'}} />
+        <SafeAreaView style={{flex: 1, backgroundColor: '#a2caff'}}>
           {/* Navigation Bar. No need to change. All style changes in style sheets */}
           <View style={styles.navBar}>
             <Image source={require('../assets/TutorUberLogo.png')} style={{width: 40, height: 40}}  />
@@ -219,6 +221,7 @@ export default class HomeMapScreen extends React.Component {
       }
       </MapView>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }

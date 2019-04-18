@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { Animated, Keyboard, UIManager, Dimensions,
           StyleSheet, Text, View, Image, ImageBackground,
           TextInput, TouchableOpacity, Button, Picker, SafeAreaView } from 'react-native';
@@ -6,13 +6,72 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
+const axios = require('axios');
 
 export default class RegisterScreen extends React.Component {
     static navigationOptions = {
         title: 'Register',
     };
+
+    constructor() {
+      super()
+      this.state = {
+         username: '',
+         password: '',
+         email: '',
+         firstname: '',
+         lastname: '',
+         major: 'none',
+         majorList: []
+      }
+    }
+
+    saveMajorsToList(){
+      axios({
+        method: 'post',
+        url: 'http://10.0.0.71:3000/api/majors',
+        data: {
+
+        }
+      })
+      .then((res) => {
+        this.setState({majorList: res.data});
+      })
+      .catch((res) => {})
+    }
+
+    componentDidMount() {
+      this.saveMajorsToList()
+    }
+
+    registerUser(){
+      axios({
+        method: 'post',
+        url: 'http://10.0.0.71:3000/api/createuser',
+        data: {
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          username: this.state.username,
+          email: this.state.email,
+          password: this.state.password,
+          major_id: this.state.major
+        }
+      })
+      .then((res)=>{
+        console.log('registered')
+        this.props.navigation.goBack();
+      })
+      .catch((res)=>{
+        console.log(res)
+        console.log(this.state.username)
+        console.log(this.state.password)
+      })
+    }
+
   render() {
     return (
+      <Fragment>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#0066BF'}} />
       <SafeAreaView style={styles.container}>
         <View style={styles.navBar}>
           <Ripple onPress={() => this.props.navigation.goBack()}>
@@ -30,21 +89,26 @@ export default class RegisterScreen extends React.Component {
              {/*Used to move everything to around the center of the page */}
             <View style={{flex:0.4}}></View>
             <View>
-              <TextInput style = {styles.bodyTextInput} placeholder="Username" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' />
-              <TextInput style = {styles.bodyTextInput} placeholder="Password" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' secureTextEntry={true} />
-              <TextInput style = {styles.bodyTextInput} placeholder="First Name" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'words' />
-              <TextInput style = {styles.bodyTextInput} placeholder="Last Name" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'words' />
-              <TextInput style = {styles.bodyTextInput} placeholder="Email" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' keyboardType = 'email-address' />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({username: text})} placeholder="Username" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({password: text})} placeholder="Password" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' secureTextEntry={true} />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({firstname: text})} placeholder="First Name" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'words' />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({lastname: text})} placeholder="Last Name" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'words' />
+              <TextInput style = {styles.bodyTextInput} onChangeText={(text)=>this.setState({email: text})} placeholder="Email" placeholderTextColor='gray' maxLength={35} autoCapitalize = 'none' keyboardType = 'email-address' />
               <View>
                 <Picker
-                  selectedValue={'Choose Major'}
+                  selectedValue={this.state.major}
                   style={{marginLeft: 65, marginRight: 65, paddingHorizontal: 7}}
-                  onValueChange={(itemValue, itemIndex) => {}}
+                  onValueChange={(itemValue) => this.setState({major: itemValue})}
                 >
                   <Picker.Item label="Choose Major" value="none" />
+                  {
+                    this.state.majorList.map((s, i) => {
+                      return <Picker.Item key={i} value={s.name} label={s.name} />
+                    })
+                  }
                 </Picker>
                 <View style={styles.bodyButtonHolder}>
-                  <Ripple onPress={() => {}}>
+                  <Ripple onPress={() => this.registerUser()}>
                    <Image source={require('../assets/RegisterButton.png')} style={{width:108, height: 36}} />
                   </Ripple>
                 </View>
@@ -53,6 +117,7 @@ export default class RegisterScreen extends React.Component {
           </ImageBackground>
         </View>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -61,6 +126,7 @@ export default class RegisterScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#a2caff'
   },
   //Bar at top with Menu Icon
   navBar: {

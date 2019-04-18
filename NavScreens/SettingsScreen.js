@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, SafeAreaView, ListView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -20,6 +20,8 @@ export default class SettingsScreen extends React.Component {
   };
   render() {
     return (
+      <Fragment>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#0066BF'}} />
       <SafeAreaView style={styles.container}>
         {/* Navigation Bar. No need to change. All style changes in style sheets */}
         <View style={styles.navBar}>
@@ -56,6 +58,7 @@ export default class SettingsScreen extends React.Component {
           </ImageBackground>
         </View>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -64,6 +67,7 @@ export default class SettingsScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#a2caff'
   },
   //Bar at top with Menu Icon
   navBar: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
@@ -23,7 +23,7 @@ export default class UpdateProfile extends React.Component {
 
         axios({
             method: 'post',
-            url: 'http://100.64.2.194:3000/api/updateuser',
+            url: 'http://10.0.0.71:3000/api/updateuser',
             data: {
                 firstname: this.state.firstname,
                 lastname: this.state.lastname,

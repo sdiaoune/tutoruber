@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const axios = require('axios');
@@ -6,6 +6,7 @@ const axios = require('axios');
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 export default class HomeLoginScreen extends React.Component {
   constructor(props){
@@ -19,10 +20,22 @@ export default class HomeLoginScreen extends React.Component {
     title: 'HomeLogin',
   };
 
+  //Makes it so the HomeLoginScreen is removed from the stack as we transition after logging in
+  resetStack = () => {
+    return this.props
+        .navigation
+        .dispatch(StackActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({ routeName: 'HomeMap' })
+          ]
+        }));
+  }
+
   verifyUser(){
     axios({
       method: 'post',
-      url: 'http://100.64.2.194:3000/api/login',
+      url: 'http://10.0.0.71:3000/api/login',
       data: {
         username: this.state.username,
         password: this.state.password
@@ -30,7 +43,7 @@ export default class HomeLoginScreen extends React.Component {
     })
     .then((res)=>{
       console.log('works')
-      this.props.navigation.navigate('HomeMap')
+      this.resetStack()
     })
     .catch((res)=>{
       console.log(res)
@@ -41,6 +54,8 @@ export default class HomeLoginScreen extends React.Component {
 
   render() {
     return (
+      <Fragment>
+      <SafeAreaView style={{flex: 0, backgroundColor: '#0066BF'}} />
       <SafeAreaView style={styles.container}>
         {/* Navigation Bar. No need to change. All style changes in style sheets */}
         <View style={styles.navBar}>
@@ -72,6 +87,7 @@ export default class HomeLoginScreen extends React.Component {
           </ImageBackground>
         </View>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -80,6 +96,7 @@ export default class HomeLoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#a2caff'
   },
   //Bar at top with Menu Icon
   navBar: {
