@@ -29,7 +29,7 @@ export default class RegisterScreen extends React.Component {
     saveMajorsToList(){
       axios({
         method: 'post',
-        url: 'http://10.108.47.73:3000/api/majors',
+        url: 'http://100.64.2.194:3000/api/majors',
         data: {
 
         }
@@ -47,7 +47,7 @@ export default class RegisterScreen extends React.Component {
     registerUser(){
       axios({
         method: 'post',
-        url: 'http://10.108.47.73:3000/api/createuser',
+        url: 'http://100.64.2.194:3000/api/createuser',
         data: {
           firstname: this.state.firstname,
           lastname: this.state.lastname,

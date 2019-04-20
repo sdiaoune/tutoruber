@@ -35,7 +35,7 @@ export default class HomeLoginScreen extends React.Component {
   verifyUser(){
     axios({
       method: 'post',
-      url: 'http://10.108.47.73:3000/api/login',
+      url: 'http://100.64.2.194:3000/api/login',
       data: {
         username: this.state.username,
         password: this.state.password

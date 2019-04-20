@@ -22,7 +22,7 @@ export default class HomeMapScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.socket = SocketIOClient('http://10.108.47.73:4000');
+        this.socket = SocketIOClient('http://100.64.2.194:4000');
         this.socket.on('chat message', (message) => {
           console.log(message);
           this.setModal3Visible(!this.state.modal3Visible);
@@ -54,7 +54,7 @@ export default class HomeMapScreen extends React.Component {
       saveMajorsToList(){
         axios({
           method: 'post',
-          url: 'http://10.108.47.73:3000/api/majors',
+          url: 'http://100.64.2.194:3000/api/majors',
           data: {
   
           }

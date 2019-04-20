@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, TouchableHighlight, Modal, Picker, Image, ListView, SafeAreaView } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import Icon from 'react-native-vector-icons/Ionicons';
+const axios = require('axios');
 
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -14,13 +15,49 @@ export default class ProfileReviewScreen extends React.Component {
             name: this.props.navigation.state.params.name,
             major: this.props.navigation.state.params.major,
             description: this.props.navigation.state.params.description,
-            dataSource: ds.cloneWithRows(['Review 1', 'Review 2', 'Review 3'])
+            list: []
         }
     }
 
     static navigationOptions = {
         title: 'ProfileReview'
-      };
+    };
+
+    componentDidMount(){
+        console.log('checking reviews')
+        axios({
+            method: "post",
+            url: "http://100.64.2.194:3000/api/getreviews",
+            data: {
+                tutor_id: 1
+            }
+        })
+        .then((res) => {
+            this.setState({list: res.data})
+            console.log(res.data)
+        })
+        .catch((res)=>{
+
+        })
+    }
+
+    displayReviews = () => {
+        axios({
+            method: "post",
+            url: "http://100.64.2.194:3000/api/getreviews",
+            data: {
+                tutor_id: 1
+            }
+        })
+        .then((res) => {
+            console.log(res.data)
+        })
+        .catch((res)=>{
+
+        })
+    }
+
+    
     
     render(){
         const {navigate} = this.props.navigation;
@@ -50,7 +87,7 @@ export default class ProfileReviewScreen extends React.Component {
                         <Text>{this.state.description}</Text>
                         <View style={{width: '100%'}}>
                             <ListView 
-                                dataSource={this.state.dataSource}
+                                dataSource={ds.cloneWithRows(this.state.list)}
                                 renderRow={(rowData, sectionID, rowID, highlightRow) => 
                                 <Ripple style={styles.listrow} onPress={()=> 
                                     {
@@ -58,9 +95,9 @@ export default class ProfileReviewScreen extends React.Component {
                                     }
                                 }>
                                     <View style={{padding: 20}}>
-                                        <Text style={{fontSize: 20, marginLeft: 8, color: '#0C6CD4'}}>Soya Diaoune</Text>
-                                        <Text style={{fontSize: 12, marginLeft: 8}}>4.3/5 stars</Text>
-                                        <Text style={{fontSize: 16, marginLeft: 8, color: '#444444'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                                        <Text style={{fontSize: 20, marginLeft: 8, color: '#0C6CD4'}}>{rowData.user_firstname + ' ' + rowData.user_lastname}</Text>
+                                        <Text style={{fontSize: 12, marginLeft: 8}}>{rowData.userratingtutor}/5 Stars</Text>
+                                        <Text style={{fontSize: 16, marginLeft: 8, color: '#444444'}}>{rowData.user_comment}</Text>
                                     </View>
                                 </Ripple>
                                 }
