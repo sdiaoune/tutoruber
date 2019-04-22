@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions } from 'react-native';
 import { createStackNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation';
 
 //Created Imports/Our Imports
@@ -15,6 +15,8 @@ import ProfileReviewScreen from './NavScreens/ProfileReviewScreen';
 import ReviewScreen from './NavScreens/ReviewScreen';
 
 const WIDTH = Dimensions.get('window').width;
+global.userID = 'test';
+
 const DrawerConfig = {
   drawerWidth: WIDTH*0.83,
   drawerPosition: 'right',

@@ -1,12 +1,12 @@
 import React, {Fragment} from 'react';
-import { ListView, StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Button, SafeAreaView } from 'react-native';
+import { ListView, StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, Button, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const axios = require('axios');
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
 
-
+const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -34,9 +34,9 @@ export default class ProfileScreen extends React.Component {
     console.log('running displayUser()')
     axios({
       method: 'post',
-      url: 'http://100.64.2.194:3000/api/singleuser',
+      url: 'http://' + IP_ADDRESS + ':3000/api/singleuser',
       data: {
-        user_id: 4
+        user_id: global.userID._currentValue
       }
     })
     .then((res) => {
@@ -47,12 +47,13 @@ export default class ProfileScreen extends React.Component {
       console.log('error')
     });
   }
+  
   //Display past sessions
   displaySessions(){
     console.log('checking reviews')
         axios({
             method: "post",
-            url: "http://100.64.2.194:3000/api/getreviews",
+            url: "http://" + IP_ADDRESS + ":3000/api/getreviews",
             data: {
                 tutor_id: 1
             }
@@ -61,9 +62,7 @@ export default class ProfileScreen extends React.Component {
             this.setState({list: res.data})
             console.log(res.data)
         })
-        .catch((res)=>{
-
-        })
+        .catch((res)=>{})
   }
   
   render() {
@@ -94,27 +93,25 @@ export default class ProfileScreen extends React.Component {
               <Text style={styles.profileText}>{'Email: ' + this.state.email}</Text>
               <Text style={styles.profileText}>{'Major: ' + this.state.major}</Text>
               <Text style={styles.profileText}></Text>
-              <View style={{width: '100%'}}>
+              <ScrollView style={{width: '100%'}}>
                 <ListView
                  enableEmptySections={true}
                  dataSource={this.dataSource.cloneWithRows(this.state.list)}
                  renderRow={(rowData, sectionID, rowID, highlightRow) => 
                    <Ripple style={styles.listrow} onPress={()=> 
                       {
-                        this.props.navigation.navigate('Review', {})
-                      }
-                   }>
-                     <View style={{padding: 20}}>
-                     <Text style={{fontSize: 20, marginLeft: 8, color: '#0C6CD4'}}>{rowData.user_firstname + ' ' + rowData.user_lastname}</Text>
-                      <Text style={{fontSize: 12, marginLeft: 8}}>{rowData.userratingtutor}/5 stars</Text>
-                      <Text style={{fontSize: 16, marginLeft: 8, color: '#444444'}}>{rowData.user_comment}</Text>
+                        this.props.navigation.navigate('Review', {row_data: rowData})
+                      }}>
+                      <View style={{padding: 20}}>
+                        <Text style={{fontSize: 20, marginLeft: 8, color: '#0C6CD4'}}>{rowData.user_firstname + ' ' + rowData.user_lastname}</Text>
+                        <Text style={{fontSize: 12, marginLeft: 8}}>{rowData.userratingtutor}/5 stars</Text>
+                        <Text style={{fontSize: 16, marginLeft: 8, color: '#444444'}}>{rowData.user_comment}</Text>
                       </View>
                   </Ripple>
-                
                  }
                  renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
                />
-              </View>
+              </ScrollView>
             </View>
           </ImageBackground>
         </View>
@@ -160,15 +157,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   bodyCont: {
-      marginLeft: 40,
-      marginRight: 40,
-      backgroundColor: 'rgba(0,121,137,0.12)'
+    flex: 1,
+    marginLeft: 20,
+    marginRight: 20,
+    backgroundColor: 'rgba(0,121,137,0.12)'
   },
   bodyText: {
-      marginBottom: 20,
-      color: '#2C2C2C',
-      fontSize: 16,
-      textDecorationLine: 'underline',
+    marginBottom: 20,
+    color: '#2C2C2C',
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
   dynamicText: {
     marginBottom: 35,

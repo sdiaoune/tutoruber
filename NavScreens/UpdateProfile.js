@@ -2,33 +2,27 @@ import React, {Fragment} from 'react';
 import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
+const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+
 export default class UpdateProfile extends React.Component {
     constructor(props){
         super(props)
-        this.state = {firstname: 'John', lastname: 'Doe', username: 'jdoe111'}
+        this.state = {firstname: '', lastname: '', username: ''}
     }
     static navigationOptions = {
         title: 'UpdateProfile',
     };
 
     makechanges(){
-        //complete change
-        // axios.post('http://10.108.47.73:3000/api/updateuser', {data: {firstname: this.state.firstname, lastname: this.state.lastname, username: this.state.username, user_id: 1}})
-        // .then( (res) => {
-        //     res.json('success')
-        // })
-        // .catch(function (error) {
-        //   console.log(error);
-        // });
 
         axios({
             method: 'post',
-            url: 'http://10.108.47.73:3000/api/updateuser',
+            url: 'http://' + IP_ADDRESS + ':3000/api/updateuser',
             data: {
                 firstname: this.state.firstname,
                 lastname: this.state.lastname,
                 username: this.state.username,
-                user_id: 1
+                user_id: global.user_id._currentValue
             }
         })
         .then( (res) => {
@@ -53,6 +47,28 @@ export default class UpdateProfile extends React.Component {
         });
     }
 
+    displayUser(){
+        console.log('running displayUser()')
+        axios({
+          method: 'post',
+          url: 'http://' + IP_ADDRESS + ':3000/api/singleuser',
+          data: {
+            user_id: global.userID._currentValue
+          }
+        })
+        .then((res) => {
+          console.log(res.data.firstname)
+          this.setState({firstname: res.data.firstname, lastname: res.data.lastname, username: res.data.username});
+        })
+        .catch(function(res){
+          console.log('error')
+        });
+      }
+
+    componentWillMount() {
+        this.displayUser()
+    }
+
     render(){
         return(
             <SafeAreaView style={{flex: 1}}>
@@ -66,7 +82,6 @@ export default class UpdateProfile extends React.Component {
             </SafeAreaView>
         )
     }
-
 }
 
 const styles = StyleSheet.create({

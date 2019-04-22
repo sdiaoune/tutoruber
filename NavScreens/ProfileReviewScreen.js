@@ -1,63 +1,42 @@
 import React, {Fragment} from 'react';
-import { LinearGradient } from 'expo';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, TouchableHighlight, Modal, Picker, Image, ListView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, ListView, SafeAreaView } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import Icon from 'react-native-vector-icons/Ionicons';
 const axios = require('axios');
 
+const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class ProfileReviewScreen extends React.Component {
     constructor(props){
         super(props);
-        
         this.state = {
             name: this.props.navigation.state.params.name,
             major: this.props.navigation.state.params.major,
             description: this.props.navigation.state.params.description,
-            list: []
+            reviewList: []
         }
     }
 
     static navigationOptions = {
         title: 'ProfileReview'
-    };
+      };
 
-    componentDidMount(){
-        console.log('checking reviews')
+    componentDidMount() {
+        console.log('\nChecking Reviews\n')
         axios({
             method: "post",
-            url: "http://100.64.2.194:3000/api/getreviews",
+            url: "http://" + IP_ADDRESS + ":3000/api/getreviews",
             data: {
                 tutor_id: 1
             }
         })
         .then((res) => {
-            this.setState({list: res.data})
+            this.setState({reviewList: res.data})
             console.log(res.data)
         })
-        .catch((res)=>{
-
-        })
+        .catch((res)=>{})
     }
-
-    displayReviews = () => {
-        axios({
-            method: "post",
-            url: "http://100.64.2.194:3000/api/getreviews",
-            data: {
-                tutor_id: 1
-            }
-        })
-        .then((res) => {
-            console.log(res.data)
-        })
-        .catch((res)=>{
-
-        })
-    }
-
-    
     
     render(){
         const {navigate} = this.props.navigation;
@@ -76,7 +55,7 @@ export default class ProfileReviewScreen extends React.Component {
                         <View style={styles.rightNav}>
                         </View>
                     </View>
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={{ alignItems: 'center', flex: 1 }}>
                         <Image
                             style={{width: 100, height: 100, borderRadius: 100/2, marginTop: 15}}
                             source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
@@ -85,13 +64,14 @@ export default class ProfileReviewScreen extends React.Component {
                         <Text style={{fontSize: 18}}>{this.state.major}</Text>
                         <Text style={{fontSize: 18}}></Text>
                         <Text>{this.state.description}</Text>
-                        <View style={{width: '100%'}}>
+                        <ScrollView style={{width: '100%'}}>
                             <ListView 
-                                dataSource={ds.cloneWithRows(this.state.list)}
+                                enableEmptySections={true}
+                                dataSource={ds.cloneWithRows(this.state.reviewList)}
                                 renderRow={(rowData, sectionID, rowID, highlightRow) => 
                                 <Ripple style={styles.listrow} onPress={()=> 
                                     {
-                                         this.props.navigation.navigate('Review', {})
+                                         this.props.navigation.navigate('Review', {row_data: rowData})
                                     }
                                 }>
                                     <View style={{padding: 20}}>
@@ -103,7 +83,7 @@ export default class ProfileReviewScreen extends React.Component {
                                 }
                                 renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
                             />
-                        </View>
+                        </ScrollView>
                     </View>
                 </SafeAreaView>
             </Fragment>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform, Dimensions, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 //Defines Drawer Navigator Panel
 
@@ -12,6 +13,20 @@ export default class MenuDrawer extends React.Component {
             </TouchableOpacity>
         );
     }
+    clearAndReplaceStack() {
+        this.props.navigation.dispatch(StackActions.popToTop());
+        this.props.navigation.dispatch(StackActions.replace({
+            routeName: 'HomeLogin'
+        }));
+    }
+    logoutLink(nav, text) {
+        return(
+            <TouchableOpacity style={{height:70}} onPress={() => {this.clearAndReplaceStack()}}>
+                <Text style={styles.naviLink}>{text}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
         return (
             <View style={styles.container}>                
@@ -24,7 +39,7 @@ export default class MenuDrawer extends React.Component {
                     {this.navLink('HomeMap', 'Home')}
                     {this.navLink('Profile', 'My Profile')}
                     {this.navLink('Settings', 'Settings')}
-                    {this.navLink('HomeLogin', 'Logout')}
+                    {this.logoutLink('HomeLogin', 'Logout')}
                 </View>
 
                 {/* Footer */}

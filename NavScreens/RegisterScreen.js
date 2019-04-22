@@ -1,12 +1,11 @@
 import React, {Fragment} from 'react';
-import { Animated, Keyboard, UIManager, Dimensions,
-          StyleSheet, Text, View, Image, ImageBackground,
-          TextInput, TouchableOpacity, Button, Picker, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Image, ImageBackground,
+          TextInput, Picker, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-//Have to install first
 import Ripple from 'react-native-material-ripple';
 const axios = require('axios');
+
+const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class RegisterScreen extends React.Component {
     static navigationOptions = {
@@ -29,10 +28,8 @@ export default class RegisterScreen extends React.Component {
     saveMajorsToList(){
       axios({
         method: 'post',
-        url: 'http://100.64.2.194:3000/api/majors',
-        data: {
-
-        }
+        url: 'http://' + IP_ADDRESS + ':3000/api/majors',
+        data: {}
       })
       .then((res) => {
         this.setState({majorList: res.data});
@@ -47,7 +44,7 @@ export default class RegisterScreen extends React.Component {
     registerUser(){
       axios({
         method: 'post',
-        url: 'http://100.64.2.194:3000/api/createuser',
+        url: 'http://' + IP_ADDRESS + ':3000/api/createuser',
         data: {
           firstname: this.state.firstname,
           lastname: this.state.lastname,

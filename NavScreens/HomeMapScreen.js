@@ -1,7 +1,14 @@
 import React, {Fragment} from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const axios = require('axios');
+
+//Have to install first
+import Ripple from 'react-native-material-ripple';
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+
+const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 //Socket for pinging
 import SocketIOClient from 'socket.io-client';
@@ -12,22 +19,27 @@ YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ]);
 
-
-//Have to install first
-import Ripple from 'react-native-material-ripple';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-
 export default class HomeMapScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.socket = SocketIOClient('http://100.64.2.194:4000');
+        this.socket = SocketIOClient('http://' + IP_ADDRESS + ':4000');
         this.socket.on('chat message', (message) => {
           console.log(message);
           this.setModal3Visible(!this.state.modal3Visible);
         } );
-        this.state = { search: 'search', modalVisible: false, modal2Visible: false, modal3Visible: false, markers: [], searchbox: 'Search', allclasses: [], course: '', modal2name: '', modal2major: '', modal2description: '', };
+        this.state = { search: 'search',
+                       modalVisible: false,
+                       modal2Visible: false,
+                       modal3Visible: false,
+                       markers: [],
+                       searchbox: 'Search',
+                       allclasses: [],
+                       course: '',
+                       modal2name: '',
+                       modal2major: '',
+                       modal2description: ''
+                      };
       }
 
       static navigationOptions = {
@@ -54,7 +66,7 @@ export default class HomeMapScreen extends React.Component {
       saveMajorsToList(){
         axios({
           method: 'post',
-          url: 'http://100.64.2.194:3000/api/majors',
+          url: 'http://' + IP_ADDRESS + ':3000/api/majors',
           data: {
   
           }
@@ -79,7 +91,7 @@ export default class HomeMapScreen extends React.Component {
             <Image source={require('../assets/TutorUberLogo.png')} style={{width: 40, height: 40}}  />
             <Image source={require('../assets/TutorUberTitle.png')} style={{width: 80, height: 40}}  />
             <View style={styles.rightNav}>
-              <Ripple onPress={() => this.props.navigation.toggleDrawer()}>
+              <Ripple onPress={() => {this.props.navigation.toggleDrawer()}}>
                 <Icon name="menu" size={40} />
               </Ripple>
             </View>
@@ -357,24 +369,5 @@ var marks = [
     latitude: 25.7571,
     longitude: -80.3739
   }
-}
-]
-
-const classes = [
-{
-  classTitle: 'Programming I',
-  classCode: 'COP 2210'
-},
-{
-  classTitle: 'Programming II',
-  classCode: 'COP 3337'
-},
-{
-  classTitle: 'Programming III',
-  classCode: 'COP 4338'
-},
-{
-  classTitle: 'Database',
-  classCode: 'COP 4710'
 }
 ]

@@ -1,12 +1,10 @@
 import React, {Fragment} from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 const axios = require('axios');
-
-
-//Have to install first
 import Ripple from 'react-native-material-ripple';
 import { StackActions, NavigationActions } from 'react-navigation';
+
+const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class HomeLoginScreen extends React.Component {
   constructor(props){
@@ -27,7 +25,7 @@ export default class HomeLoginScreen extends React.Component {
         .dispatch(StackActions.reset({
           index: 0,
           actions: [
-            NavigationActions.navigate({ routeName: 'HomeMap' })
+            NavigationActions.navigate({ routeName: 'HomeMap'})
           ]
         }));
   }
@@ -35,7 +33,7 @@ export default class HomeLoginScreen extends React.Component {
   verifyUser(){
     axios({
       method: 'post',
-      url: 'http://100.64.2.194:3000/api/login',
+      url: 'http://' + IP_ADDRESS + ':3000/api/login',
       data: {
         username: this.state.username,
         password: this.state.password
@@ -45,11 +43,11 @@ export default class HomeLoginScreen extends React.Component {
       if(res.data.username == this.state.username){
         console.log(res.data)
         console.log('works')
+        global.userID = React.createContext(res.data.user_id)
         this.resetStack()
       }else{
         console.log('not valid')
       }
-
     })
     .catch((res)=>{
       console.log(res)
