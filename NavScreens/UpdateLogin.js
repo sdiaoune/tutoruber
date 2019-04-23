@@ -2,7 +2,8 @@ import React, {Fragment} from 'react';
 import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+
 
 export default class UpdateLogin extends React.Component {
     constructor(props){
@@ -13,6 +14,8 @@ export default class UpdateLogin extends React.Component {
         title: 'UpdateLogin',
     };
 
+    
+
     makechanges(){
         axios({
             method: 'post',
@@ -20,7 +23,7 @@ export default class UpdateLogin extends React.Component {
             data: {
                 email: this.state.email,
                 password: this.state.password,
-                user_id: global.user_id._currentValue
+                user_id: global.userID._currentValue
             }
         })
         .then( (res) => {

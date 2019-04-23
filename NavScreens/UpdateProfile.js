@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import { StyleSheet, View, TextInput, Text, Button, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 const axios = require('axios');
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class UpdateProfile extends React.Component {
     constructor(props){
@@ -22,7 +22,7 @@ export default class UpdateProfile extends React.Component {
                 firstname: this.state.firstname,
                 lastname: this.state.lastname,
                 username: this.state.username,
-                user_id: global.user_id._currentValue
+                user_id: global.userID._currentValue
             }
         })
         .then( (res) => {
@@ -33,7 +33,8 @@ export default class UpdateProfile extends React.Component {
                   {text: 'OK', onPress: () => console.log('OK Pressed')},
                 ],
                 { cancelable: false }
-              )
+              );
+              console.log(this.state.user_id)
         })
         .catch(function (error) {
           Alert.alert(
@@ -43,7 +44,8 @@ export default class UpdateProfile extends React.Component {
               {text: 'OK', onPress: () => console.log('OK Pressed')},
             ],
             { cancelable: false }
-          )
+          );
+          console.log(error)
         });
     }
 

@@ -6,7 +6,7 @@ const axios = require('axios');
 //Have to install first
 import Ripple from 'react-native-material-ripple';
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class ProfileScreen extends React.Component {
   static navigationOptions = {

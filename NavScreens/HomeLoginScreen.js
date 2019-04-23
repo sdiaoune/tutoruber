@@ -4,7 +4,7 @@ const axios = require('axios');
 import Ripple from 'react-native-material-ripple';
 import { StackActions, NavigationActions } from 'react-navigation';
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class HomeLoginScreen extends React.Component {
   constructor(props){
@@ -41,9 +41,10 @@ export default class HomeLoginScreen extends React.Component {
     })
     .then((res)=>{
       if(res.data.username == this.state.username){
-        console.log(res.data)
+        console.log(res.data.user_id)
         console.log('works')
         global.userID = React.createContext(res.data.user_id)
+        console.log('global user id is: ' + global.userID._currentValue)
         this.resetStack()
       }else{
         console.log('not valid')

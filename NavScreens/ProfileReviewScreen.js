@@ -4,7 +4,7 @@ import Ripple from 'react-native-material-ripple';
 import Icon from 'react-native-vector-icons/Ionicons';
 const axios = require('axios');
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class ProfileReviewScreen extends React.Component {

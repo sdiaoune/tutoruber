@@ -2,13 +2,14 @@ import React, {Fragment} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const axios = require('axios');
+import Geolocation from 'react-native-geolocation-service';
 
 //Have to install first
 import Ripple from 'react-native-material-ripple';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 //Socket for pinging
 import SocketIOClient from 'socket.io-client';
@@ -24,9 +25,9 @@ export default class HomeMapScreen extends React.Component {
     constructor(props) {
         super(props);
         this.socket = SocketIOClient('http://' + IP_ADDRESS + ':4000');
-        this.socket.on('chat message', (message) => {
+        this.socket.on('miami', (message) => {
           console.log(message);
-          this.setModal3Visible(!this.state.modal3Visible);
+          this.changeIncomingState(message);
         } );
         this.state = { search: 'search',
                        modalVisible: false,
@@ -38,7 +39,10 @@ export default class HomeMapScreen extends React.Component {
                        course: '',
                        modal2name: '',
                        modal2major: '',
-                       modal2description: ''
+                       modal2description: '',
+                       incomingName: '',
+                       latitude: '',
+                       longitude: ''
                       };
       }
 
@@ -46,6 +50,42 @@ export default class HomeMapScreen extends React.Component {
         title: 'HomeMap',
         drawerLockMode: 'locked-open',
       };
+
+      onConfirm(){
+        // this.socket.on('miami', (message) => {
+        //   console.log(message);
+        //   this.changeIncomingState(message);
+        // } );
+        const location = this.state.latitude + ', ' + this.state.longitude
+        this.socket.emit('miami', location);
+        this.setModal3Visible(!this.state.modal3Visible);
+      }
+
+      changeIncomingState(incoming_id){
+        console.log(incoming_id)
+        axios({
+          method: 'post',
+          url: 'http://' + IP_ADDRESS + ':3000/api/singleuser',
+          data: {
+            user_id: parseInt(incoming_id)
+          }
+        })
+        .then(
+          (res)=>{
+            console.log(res.data)
+            this.setState({incomingName: res.data.firstname})
+            this.setModal3Visible(!this.state.modal3Visible)
+          }
+        )
+        .catch(
+          (error)=>{
+            console.log(error)
+            console.log('There has been a problem with your fetch operation: ' + error.message);
+ // ADD THIS THROW error
+  throw error;
+          }
+        )
+      }
     
       //Created Functions
       setModalVisible(visible) {
@@ -54,7 +94,8 @@ export default class HomeMapScreen extends React.Component {
       setModal2Visible(visible, name, major, description) {
         this.setState({modal2Visible: visible, modal2name: name, modal2major: major, modal2description: description});
       }
-      setModal3Visible(visible) {
+      setModal3Visible(visible, incoming_id) {
+        
         this.setState({modal3Visible: visible});
       }
     
@@ -78,6 +119,17 @@ export default class HomeMapScreen extends React.Component {
       }
   
       componentDidMount() {
+        Geolocation.getCurrentPosition(
+          (position) => {
+              console.log(position);
+              this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude})
+          },
+          (error) => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
         this.saveMajorsToList()
       }
 
@@ -194,10 +246,11 @@ export default class HomeMapScreen extends React.Component {
     shadowOpacity: 0.2,
     borderRadius: 8, justifyContent: 'center', alignItems: 'center'}}n>
 
-    <Text style={{fontSize: 18}}>'Someone' would like to send you a request</Text>
+    <Text style={{fontSize: 18}}>{this.state.incomingName} would like to send you a request</Text>
     <TouchableOpacity
     onPress={() => {
-      this.setModal3Visible(!this.state.modal3Visible);
+      this.onConfirm();
+      
     }} style={styles.btn2}>
       <Text style={{color: 'white'}}>Confirm</Text>
     </TouchableOpacity>

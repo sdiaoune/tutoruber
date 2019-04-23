@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Ripple from 'react-native-material-ripple';
 const axios = require('axios');
 
-const IP_ADDRESS = '10.0.0.71'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
+const IP_ADDRESS = '10.108.47.73'; //USE THIS TO CHANGE IP ADDRESS FOR ALL URLs
 
 export default class RegisterScreen extends React.Component {
     static navigationOptions = {
