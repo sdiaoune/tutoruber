@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TextInput, TouchableOpacity, SafeAreaView, Alert} from 'react-native';
 const axios = require('axios');
 import Ripple from 'react-native-material-ripple';
 import { StackActions, NavigationActions } from 'react-navigation';
@@ -41,13 +41,68 @@ export default class HomeLoginScreen extends React.Component {
     })
     .then((res)=>{
       if(res.data.username == this.state.username){
-        console.log(res.data.user_id)
-        console.log('works')
+        const id = res.data.user_id
+        // console.log(res.data.user_id)
+        // console.log('works')
+        // global.userID = React.createContext(res.data.user_id)
+        // console.log('global user id is: ' + global.userID._currentValue)
+
         global.userID = React.createContext(res.data.user_id)
+        console.log('user id: ' + id)
+        this.checkIfTutor(id)
+        // this.resetStack()
+      }else{
+        console.log('verifyuser not valid')
+        Alert.alert(
+          'User Does Not Exist',
+          'Error',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+      }
+    })
+    .catch((res)=>{
+      console.log(res)
+      console.log(this.state.username)
+      console.log(this.state.password)
+      throw res
+    })
+  }
+
+  //Check if tutor
+  checkIfTutor(id){
+    console.log('checkIfTutor running')
+    axios({
+      method: 'post',
+      url: 'http://' + IP_ADDRESS + ':3000/api/tutor',
+      data: {
+        user_id: id
+      }
+    })
+    .then((res)=>{
+      console.log(res.data)
+      if(res.data.length == 0){
+        //is not tutor
+        console.log('user is not tutor')
+        console.log('works')
+        // global.userID = React.createContext(res.data.user_id)
+        global.tutorID = React.createContext(0)
         console.log('global user id is: ' + global.userID._currentValue)
+        console.log('global tutor id is: ' + global.tutorID._currentValue)
         this.resetStack()
       }else{
-        console.log('not valid')
+      //is tutor
+      console.log('user is tutor')
+      console.log(res.data[0].user_id)
+      console.log('works')
+      global.userID = React.createContext(res.data[0].user_id)
+      global.tutorID = React.createContext(res.data[0].tutor_id)
+      console.log('global user id is: ' + global.userID._currentValue)
+      console.log('global tutor id is: ' + global.tutorID._currentValue)
+      this.resetStack()
+
       }
     })
     .catch((res)=>{

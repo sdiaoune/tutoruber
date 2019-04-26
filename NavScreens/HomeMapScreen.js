@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, Picker, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, Picker, SafeAreaView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const axios = require('axios');
 import Geolocation from 'react-native-geolocation-service';
@@ -27,8 +27,20 @@ export default class HomeMapScreen extends React.Component {
         this.socket = SocketIOClient('http://' + IP_ADDRESS + ':4000');
         this.socket.on('miami', (message) => {
           console.log(message);
-          this.changeIncomingState(message);
-        } );
+          console.log(global.tutorID._currentValue)
+          if(global.tutorID._currentValue > 0){
+            this.changeIncomingState(message);
+          }
+        });
+
+        this.socket.on('location', (message) => {
+          console.log('the id of coordinate sender is' + message.id);
+          console.log(global.tutorID._currentValue)
+          if(message.id != global.userID._currentValue){
+            this.setModal4Visible(!this.state.modal4Visible)
+            this.setState({markers: [message]})
+          }
+        });
         this.state = { search: 'search',
                        modalVisible: false,
                        modal2Visible: false,
@@ -41,8 +53,9 @@ export default class HomeMapScreen extends React.Component {
                        modal2major: '',
                        modal2description: '',
                        incomingName: '',
-                       latitude: '',
-                       longitude: ''
+                       latitude: 0.0,
+                       longitude: 0.0,
+                       modal4Visible: false
                       };
       }
 
@@ -51,14 +64,61 @@ export default class HomeMapScreen extends React.Component {
         drawerLockMode: 'locked-open',
       };
 
+      resetMarks(){
+
+      }
+
       onConfirm(){
         // this.socket.on('miami', (message) => {
         //   console.log(message);
         //   this.changeIncomingState(message);
         // } );
-        const location = this.state.latitude + ', ' + this.state.longitude
-        this.socket.emit('miami', location);
-        this.setModal3Visible(!this.state.modal3Visible);
+        axios({
+          method: 'post',
+          url: 'http://' + IP_ADDRESS + ':3000/api/singleuser',
+          data: {
+            user_id: global.userID._currentValue
+          }
+        })
+        .then((res)=>{
+          var location = {
+            title: res.data.firstname + ' ' + res.data.lastname,
+            description: 'Tutor Session',
+            name: res.data.firstname + ' ' + res.data.lastname,
+            major: res.data.name,
+            latlng:{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+            },
+            id: global.userID._currentValue
+          }
+          console.log('sending location ' + location)
+          // this.setState({markers: location})
+          this.socket.emit('location', location);
+          this.setModal3Visible(!this.state.modal3Visible);
+
+          // {
+          //   title: 'Second Location',
+          //   description: 'Hi, I tutor Database and Programming I',
+          //   name: 'John Doe',
+          //   major: 'Computer Engineering',
+          //   latlng: {
+          //     latitude: 25.7571,
+          //     longitude: -80.3739
+          //   }
+          // }
+
+        })
+        .catch((error)=>{
+          
+        })
+        // const location = {
+        //   id: global.userID._currentValue,
+        //   latitude: this.state.latitude,
+        //   longitude: this.state.longitude
+        // }
+        // this.socket.emit('location', location);
+        // this.setModal3Visible(!this.state.modal3Visible);
       }
 
       changeIncomingState(incoming_id){
@@ -95,12 +155,16 @@ export default class HomeMapScreen extends React.Component {
         this.setState({modal2Visible: visible, modal2name: name, modal2major: major, modal2description: description});
       }
       setModal3Visible(visible, incoming_id) {
-        
         this.setState({modal3Visible: visible});
+      }
+
+      setModal4Visible(visible) {
+        this.setState({modal4Visible: visible});
       }
     
       performSearch(){
-        this.setState({markers: marks})
+        this.socket.emit('miami', global.userID._currentValue)
+        // this.setState({markers: marks})
         this.setModalVisible(!this.state.modalVisible)
       }
 
@@ -188,6 +252,39 @@ export default class HomeMapScreen extends React.Component {
                </View>
               </View>
            </Modal>
+
+{/* For Location info */}
+          {/* Popup Modal For Majors */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.modal4Visible}
+            onRequestClose={() => {
+             Alert.alert('Modal has been closed.');
+            }}>
+                       {/*View For Modal */}
+                       <View style={styles.modalStyle}>
+              <View style={styles.modalInner}>
+                {/* Picker For Majors */}
+                <Text>User has accepted your request</Text>
+               <TouchableOpacity style={styles.btn} onPress={()=>{
+                 this.state.searchbox = this.state.course
+                this.setModal4Visible(!this.state.modal4Visible);
+                //  this.performSearch();
+               }}>
+                <Text>Go to location</Text>
+               </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setModal4Visible(!this.state.modalVisible);
+                  }} style={styles.btn}>
+                  <Text>Dismiss</Text>
+                </TouchableOpacity>
+               </View>
+              </View>
+           </Modal>
+
+           
 
           {/* Popup Modal For Profiles */}
           <Modal animationType="slide"
@@ -283,7 +380,7 @@ export default class HomeMapScreen extends React.Component {
       >
 
       <Marker //Marker for User's location
-        coordinate={marker.latlng}
+        coordinate={{latitude: this.state.latitude, longitude: this.state.longitude}}
         title={marker.title}
         description={marker.description} >
         <View style={styles.mycircle}>
@@ -291,12 +388,15 @@ export default class HomeMapScreen extends React.Component {
         </View>
         </Marker>
       
-      {/* Set Markers */}
+      {/* Incoming Markers */}
       {
         this.state.markers.map((mark, key) => 
         <MapView.Marker
           key={key}
-          coordinate={mark.latlng}
+          coordinate={{
+      latitude: mark.latlng.latitude,
+      longitude: mark.latlng.longitude
+  }}
           onPress={()=>{this.setModal2Visible(!this.state.modal2Visible, mark.name, mark.major, mark.description)}}
         >
         <View style={styles.circle}>
